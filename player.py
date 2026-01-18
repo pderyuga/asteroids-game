@@ -1,6 +1,7 @@
 import pygame
 from circleshape import CircleShape
 from constants import *
+from logger import log_event
 from shot import Shot
 
 class Player(CircleShape):
@@ -54,3 +55,7 @@ class Player(CircleShape):
         velocity = forward * PLAYER_SHOT_SPEED
 
         new_shot.velocity = velocity
+        
+        log_event("player_shot", 
+                  position=[round(self.position.x, 2), round(self.position.y, 2)],
+                  rotation=round(self.rotation, 2))

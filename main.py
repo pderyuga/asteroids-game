@@ -1,6 +1,7 @@
 import pygame
 import sys
 from constants import *
+from logger import log_event, log_state
 from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
@@ -38,16 +39,26 @@ def main():
     
         screen.fill('#000000')
         
+        log_state()
+        
         updatable.update(dt)
 
         for asteroid in asteroids:
             if asteroid.has_collided(player):
+                log_event("player_collision",
+                          player_position=[round(player.position.x, 2), round(player.position.y, 2)],
+                          asteroid_position=[round(asteroid.position.x, 2), round(asteroid.position.y, 2)],
+                          asteroid_radius=asteroid.radius)
                 print('Game over!')
                 sys.exit()
 
         for asteroid in asteroids:
             for shot in shots:
                 if shot.has_collided(asteroid):
+                    log_event("asteroid_destroyed",
+                              asteroid_position=[round(asteroid.position.x, 2), round(asteroid.position.y, 2)],
+                              asteroid_radius=asteroid.radius,
+                              shot_position=[round(shot.position.x, 2), round(shot.position.y, 2)])
                     asteroid.split()
                     shot.kill()
 
